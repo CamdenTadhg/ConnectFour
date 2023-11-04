@@ -9,8 +9,9 @@ class Game {
   constructor(width, height){
     this.width = width;
     this.height = height;
-    this.currPlayer = 1; // active player: 1 or 2
+    this.currPlayer = playerOne;
     this.board = []; // array of rows, each row is array of cells  (board[y][x])
+    this.gameOver = false;
   }
 
   // makeBoard: create in-JS board structure: board = array of rows, each row is array of cells  (board[y][x])
@@ -27,7 +28,8 @@ class Game {
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
     top.setAttribute('id', 'column-top');
-    top.addEventListener('click', this.handleClick);
+    this.handleGameClick = this.handleClick.bind(this);
+    top.addEventListener('click', this.handleGameClick);
   
     for (let x = 0; x < this.width; x++) {
       const headCell = document.createElement('td');
@@ -51,7 +53,7 @@ class Game {
     }
   }
 
-  //findSpotForCol: given column x, return rop empty y (null if filled)
+  //findSpotForCol: given column x, return top empty y (null if filled)
   findSpotForCol(x) {
     for (let y = this.height - 1; y >= 0; y--) {
       if (!this.board[y][x]) {
@@ -65,7 +67,7 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer}`);
+    piece.classList.add(`p${this.currPlayer.color}`);
     piece.style.top = -50 * (y + 2);
   
     const spot = document.getElementById(`${y}-${x}`);
@@ -79,29 +81,36 @@ class Game {
 
   //handleClick: handle click of column to to play piece
   handleClick(evt) {
-    console.log('the handleClick this is ', this);
     // get x from ID of clicked cell
     const x = +evt.target.id;
     // get next spot in column (if none, ignore click)
-    const y = newGame.findSpotForCol(x);
-    if (y === null) {
+    //make it so you can't continue doing moves once a game has ended
+    const y = this.findSpotForCol(x);
+    if (y === null || this.gameOver === true) {
       return;
     }
     // place piece in board and add to HTML table
-    newGame.board[y][x] = newGame.currPlayer;
-    newGame.placeInTable(y, x);
+    this.board[y][x] = this.currPlayer.color;
+    this.placeInTable(y, x);
     
+    //add pause so that the piece appears before the alert runs
     // check for win
-    if (newGame.checkForWin()) {
-      return newGame.endGame(`Player ${newGame.currPlayer} won!`);
+    if (this.checkForWin()) {
+      this.gameOver = true;
+      setTimeout(()=> {
+        return this.endGame(`Player ${this.currPlayer} won!`);
+      }, 100);
     }
     
     // check for tie
-    if (newGame.board.every(row => row.every(cell => cell))) {
-      return newGame.endGame('Tie!');
+    if (this.board.every(row => row.every(cell => cell))) {
+      this.gameOver=true;
+      setTimeout(() => {
+        return this.endGame('Tie!');
+      }, 100);
     }
     // switch players
-    newGame.currPlayer = newGame.currPlayer === 1 ? 2 : 1;
+    this.currPlayer = this.currPlayer === playerOne ? playerTwo : playerOne;
   }
 
   //checkForWin: check board cell-by-cell for "does a win start here?"
@@ -135,22 +144,42 @@ class Game {
       }
     }
   }
+  
+  //make a start game button
+  createNewGame() {
+    const button = document.querySelector('button');
+    button.addEventListener('click', () => {
+      this.clearBoard();
+      this.makeBoard();
+      this.makeHtmlBoard();
+    })
+  }
+
+  //clear the existing board
+  clearBoard() {
+    const table = document.querySelector('table');
+    table.innerHTML = '';
+    this.currPlayer = 1;
+    this.board = [];
+    this.gameOver = false;
+  }
+}
+
+//make a player class that takes a string color name and stores it on that player instance
+class Player {
+  constructor (color) {
+    this.color = color;
+  }
 }
 
 
+const playerOne = new Player('purple');
+const playerTwo = new Player('green');
 const newGame = new Game(6, 7);
-newGame.makeBoard();
-newGame.makeHtmlBoard();
+newGame.createNewGame();
 
-const newGame2 = new Game(6, 7);
-newGame2.makeBoard();
-newGame2.makeHtmlBoard();
 
-//rewrite the whole thing as a class that functions for the game
-//add pause to endGame so that the piece appears before the alert runs
-//make a start game button
-//make it so you can't continue doing moves once a game has ended (use a property to do this)
-//make a player class that takes a string color name and stores it on that player instance
+
 //make game track the current player instance instead of current player number
 //update the code so the pieces are the right color for each player
 //add a form so users can enter colors for each player. 
