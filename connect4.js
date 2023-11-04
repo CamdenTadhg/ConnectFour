@@ -9,7 +9,7 @@ class Game {
   constructor(width, height){
     this.width = width;
     this.height = height;
-    this.currPlayer = playerOne;
+    this.currPlayer = 1; // active player: 1 or 2
     this.board = []; // array of rows, each row is array of cells  (board[y][x])
     this.gameOver = false;
   }
@@ -67,7 +67,7 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer.color}`);
+    piece.classList.add(`p${this.currPlayer}`);
     piece.style.top = -50 * (y + 2);
   
     const spot = document.getElementById(`${y}-${x}`);
@@ -90,7 +90,7 @@ class Game {
       return;
     }
     // place piece in board and add to HTML table
-    this.board[y][x] = this.currPlayer.color;
+    this.board[y][x] = this.currPlayer;
     this.placeInTable(y, x);
     
     //add pause so that the piece appears before the alert runs
@@ -110,7 +110,7 @@ class Game {
       }, 100);
     }
     // switch players
-    this.currPlayer = this.currPlayer === playerOne ? playerTwo : playerOne;
+    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
   }
 
   //checkForWin: check board cell-by-cell for "does a win start here?"
@@ -167,16 +167,15 @@ class Game {
 
 //make a player class that takes a string color name and stores it on that player instance
 class Player {
-  constructor (color) {
+  constructor(color) {
     this.color = color;
   }
 }
 
-
-const playerOne = new Player('purple');
-const playerTwo = new Player('green');
-const newGame = new Game(6, 7);
-newGame.createNewGame();
+  const playerOne = new Player('purple');
+  const playerTwo = new Player('green');
+  const newGame = new Game(6, 7);
+  newGame.createNewGame();
 
 
 
