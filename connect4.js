@@ -5,6 +5,28 @@
  * board fills (tie)
  */
 
+//make a player class that takes a string color name and stores it on that player instance
+class Player {
+  constructor(color) {
+    this.color = color;
+  }
+}
+
+//make form to set player colors
+const colorButton = document.querySelector('#set-colors');
+const p1Input = document.querySelector('#playerOne');
+const p2Input = document.querySelector('#playerTwo');
+//set up default colors so a game can be played without entering colors. 
+let playerOne = new Player('purple');
+let playerTwo = new Player('green');
+
+colorButton.addEventListener('click', (event) => {
+  event.preventDefault(); 
+  playerOne.color = p1Input.value;
+  playerTwo.color = p2Input.value;
+  $('form').append('<span>Player colors set</span>')
+})
+
 class Game {
   constructor(width, height){
     this.width = width;
@@ -99,7 +121,7 @@ class Game {
     // check for win
     if (this.checkForWin()) {
       this.gameOver = true;
-      return this.endGame(`${this.currPlayer} player won!`);
+      return this.endGame(`${this.currPlayer[0].toUpperCase()}${this.currPlayer.slice(1, this.currPlayer.length)} player won!`);
     }
     
     // check for tie
@@ -143,16 +165,6 @@ class Game {
     }
   }
   
-  //make a start game button
-  createNewGame() {
-    const startButton = document.querySelector('#start-game');
-    startButton.addEventListener('click', () => {
-      this.clearBoard();
-      this.makeBoard();
-      this.makeHtmlBoard();
-    })
-  }
-
   //clear the existing board
   clearBoard() {
     const table = document.querySelector('table');
@@ -163,31 +175,19 @@ class Game {
   }
 }
 
-//make a player class that takes a string color name and stores it on that player instance
-class Player {
-  constructor(color) {
-    this.color = color;
-  }
-}
 
-const colorButton = document.querySelector('#set-colors');
-const p1Input = document.querySelector('#playerOne');
-const p2Input = document.querySelector('#playerTwo');
-let playerOne;
-let playerTwo;
-
-colorButton.addEventListener('click', () => {
-  preventDefault(); //NOT WORKING?!?
-  playerOne = new Player(p1Input.value);
-  playerTwo = new Player(p2Input.value);
+//make a start game button
+const startButton = document.querySelector('#start-game');
+const newGame = new Game(6, 7);
+startButton.addEventListener('click', () => {
+  newGame.currPlayer = playerOne.color;
+  newGame.clearBoard();
+  newGame.makeBoard();
+  newGame.makeHtmlBoard();
 })
 
-const newGame = new Game(6, 7);
-newGame.createNewGame();
 
 
-//add a form so users can enter colors for each player. 
-  //create form that takes in player colors
-  //set event listeners for submit of that form
-  //pull values once 
+//figure out a better way to track players
 //fix so the piece appears before the alert
+//animate so the piece drops through the table
