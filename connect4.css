@@ -15,12 +15,12 @@
   border-radius: 50%;
 }
 
-.piece.p1 {
-  background-color: red;
+.piece.purple {
+  background-color: purple;
 }
 
-.piece.p2 {
-  background-color: blue;
+.piece.green {
+  background-color: green;
 }
 
 /* column-top is table row of clickable areas for each column */

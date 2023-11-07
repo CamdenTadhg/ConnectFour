@@ -66,13 +66,11 @@ class Game {
   //placeInTable: update DOM to place piece into HTML table of board
   placeInTable(y, x) {
     const piece = document.createElement('div');
-    console.log(piece);
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer}`);
+    piece.classList.add(`${this.currPlayer}`);
     piece.style.top = -50 * (y + 2);
   
     const spot = document.getElementById(`${y}-${x}`);
-    console.log(spot);
     spot.append(piece);
   }
 
@@ -101,7 +99,7 @@ class Game {
     if (this.checkForWin()) {
       this.gameOver = true;
       setTimeout(()=> {
-        return this.endGame(`Player ${this.currPlayer} won!`);
+        return this.endGame(`${this.currPlayer} player won!`);
       }, 100);
     }
     
@@ -183,6 +181,5 @@ class Player {
 
 
 
-//make game track the current player instance instead of current player number
 //update the code so the pieces are the right color for each player
 //add a form so users can enter colors for each player. 
