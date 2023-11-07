@@ -31,7 +31,7 @@ class Game {
   constructor(width, height){
     this.width = width;
     this.height = height;
-    this.currPlayer = playerOne.color; // active player instance
+    this.currPlayer = playerOne; // active player instance
     this.board = []; // array of rows, each row is array of cells  (board[y][x])
     this.gameOver = false;
   }
@@ -90,7 +90,7 @@ class Game {
     const piece = document.createElement('div');
     piece.classList.add('piece');
     // piece.classList.add(`${this.currPlayer}`);
-    piece.style.backgroundColor = this.currPlayer;
+    piece.style.backgroundColor = this.currPlayer.color;
     piece.style.top = -50 * (y + 2);
   
     const spot = document.getElementById(`${y}-${x}`);
@@ -114,14 +114,19 @@ class Game {
       return;
     }
     // place piece in board and add to HTML table
-    this.board[y][x] = this.currPlayer;
+    this.board[y][x] = this.currPlayer.color;
     this.placeInTable(y, x);
     
-    //add pause so that the piece appears before the alert runs
     // check for win
     if (this.checkForWin()) {
       this.gameOver = true;
-      return this.endGame(`${this.currPlayer[0].toUpperCase()}${this.currPlayer.slice(1, this.currPlayer.length)} player won!`);
+      if (this.currPlayer = playerOne){
+        return this.endGame('Player one wins!')
+      }
+      if (this.currPlayer = playerTwo){
+        return this.endGame('Player two wins!')
+      }
+      // return this.endGame(`${this.currPlayer[0].toUpperCase()}${this.currPlayer.slice(1, this.currPlayer.length)} player won!`);
     }
     
     // check for tie
@@ -130,7 +135,7 @@ class Game {
       return this.endGame('Tie!');
     }
     // switch players
-    this.currPlayer = this.currPlayer === playerOne.color ? playerTwo.color : playerOne.color;
+    this.currPlayer = this.currPlayer === playerOne ? playerTwo : playerOne;
   }
 
   //checkForWin: check board cell-by-cell for "does a win start here?"
@@ -145,7 +150,7 @@ class Game {
           y < this.height &&
           x >= 0 &&
           x < this.width &&
-          this.board[y][x] === this.currPlayer
+          this.board[y][x] === this.currPlayer.color
       );
     });
     for (let y = 0; y < this.height; y++) {
@@ -169,7 +174,7 @@ class Game {
   clearBoard() {
     const table = document.querySelector('table');
     table.innerHTML = '';
-    this.currPlayer = playerOne.color;
+    this.currPlayer = playerOne;
     this.board = [];
     this.gameOver = false;
   }
@@ -188,6 +193,5 @@ startButton.addEventListener('click', () => {
 
 
 
-//figure out a better way to track players
 //fix so the piece appears before the alert
 //animate so the piece drops through the table
