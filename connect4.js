@@ -85,6 +85,7 @@ class Game {
     const x = +evt.target.id;
     // get next spot in column (if none, ignore click)
     //make it so you can't continue doing moves once a game has ended
+
     const y = this.findSpotForCol(x);
     if (y === null || this.gameOver === true) {
       return;
@@ -172,9 +173,10 @@ class Player {
   }
 }
 
+
+  const newGame = new Game(6, 7);
   const playerOne = new Player('purple');
   const playerTwo = new Player('green');
-  const newGame = new Game(6, 7);
   newGame.createNewGame();
 
 
