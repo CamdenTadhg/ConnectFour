@@ -15,14 +15,6 @@
   border-radius: 50%;
 }
 
-.piece.purple {
-  background-color: purple;
-}
-
-.piece.green {
-  background-color: green;
-}
-
 /* column-top is table row of clickable areas for each column */
 
 #column-top td {

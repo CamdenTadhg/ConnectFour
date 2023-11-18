@@ -4,6 +4,7 @@
  * column until a player gets four-in-a-row (horiz, vert, or diag) or until
  * board fills (tie)
  */
+const $body = $('body');
 
 //make a player class that takes a string color name and stores it on that player instance
 class Player {
@@ -24,6 +25,7 @@ colorButton.addEventListener('click', (event) => {
   event.preventDefault(); 
   playerOne.color = p1Input.value;
   playerTwo.color = p2Input.value;
+  $('span').remove();
   $('form').append('<span>Player colors set</span>')
 })
 
@@ -86,10 +88,10 @@ class Game {
   }
 
   //placeInTable: update DOM to place piece into HTML table of board
+  //make dot appear outside the div by creating a transformation in css using an initial position and a final position
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    // piece.classList.add(`${this.currPlayer}`);
     piece.style.backgroundColor = this.currPlayer.color;
     piece.style.top = -50 * (y + 2);
   
@@ -97,9 +99,11 @@ class Game {
     spot.append(piece);
   }
 
-  //endGame: announce game end
-  endGame(msg) {
-    alert(msg);
+  //createModal to announce game end
+  //modal rather than an alert allows final game piece to appear before game is declared over. 
+  createModal(msg) {
+    $('#message').text(msg);
+    $('#myModal').modal();
   }
 
   //handleClick: handle click of column to to play piece
@@ -108,7 +112,6 @@ class Game {
     const x = +evt.target.id;
     // get next spot in column (if none, ignore click)
     //make it so you can't continue doing moves once a game has ended
-
     const y = this.findSpotForCol(x);
     if (y === null || this.gameOver === true) {
       return;
@@ -116,23 +119,21 @@ class Game {
     // place piece in board and add to HTML table
     this.board[y][x] = this.currPlayer.color;
     this.placeInTable(y, x);
-    
     // check for win
     if (this.checkForWin()) {
       this.gameOver = true;
       if (this.currPlayer = playerOne){
-        return this.endGame('Player one wins!')
+        return this.createModal('Player one wins!')
       }
       if (this.currPlayer = playerTwo){
-        return this.endGame('Player two wins!')
+        return this.createModal('Player two wins!')
       }
-      // return this.endGame(`${this.currPlayer[0].toUpperCase()}${this.currPlayer.slice(1, this.currPlayer.length)} player won!`);
     }
     
     // check for tie
     if (this.board.every(row => row.every(cell => cell))) {
       this.gameOver=true;
-      return this.endGame('Tie!');
+      return this.createModal('Tie!');
     }
     // switch players
     this.currPlayer = this.currPlayer === playerOne ? playerTwo : playerOne;
