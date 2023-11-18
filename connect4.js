@@ -94,9 +94,12 @@ class Game {
     piece.classList.add('piece');
     piece.style.backgroundColor = this.currPlayer.color;
     piece.style.top = -50 * (y + 2);
-  
-    const spot = document.getElementById(`${y}-${x}`);
-    spot.append(piece);
+    for (let tempy = 0; tempy <= y; tempy++){
+      setTimeout(function(){
+        let spot = document.getElementById(`${tempy}-${x}`);
+        spot.append(piece);
+      }, 100)
+    }
   }
 
   //createModal to announce game end
